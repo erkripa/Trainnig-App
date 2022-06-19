@@ -1,4 +1,4 @@
-package com.example.video_player_app
+package com.example.training
 
 import io.flutter.embedding.android.FlutterActivity
 

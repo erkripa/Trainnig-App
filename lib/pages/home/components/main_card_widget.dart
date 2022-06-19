@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 import '../../../utils/colors.dart';
@@ -16,15 +14,16 @@ class MainCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: D.sHeight / 3.5,
+      height: D.sHeight / 4,
       width: double.maxFinite,
-      padding: EdgeInsets.only(top: D.p20, left: D.w20, right: D.w20),
-      margin: EdgeInsets.only(top: D.h20),
+      padding:
+          EdgeInsets.only(top: D.p20, left: D.w20, right: D.w20, bottom: D.p20),
+      margin: EdgeInsets.only(top: D.h15),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
             AppColor.gradientFirst,
-            AppColor.gradientSecond.withOpacity(0.8),
+            AppColor.gradientSecond.withOpacity(0.99),
           ],
           begin: Alignment.bottomLeft,
           end: Alignment.centerRight,
@@ -93,12 +92,11 @@ class MainCardWidget extends StatelessWidget {
                 child: AppIcon(
                   icon: Icons.play_circle_fill_rounded,
                   iconColor: Colors.white,
-                  iconSize: D.f20 * 3,
+                  iconSize: D.f20 * 2.8,
                 ),
               ),
             ],
           ),
-          SizedBox(height: D.h25),
         ],
       ),
     );

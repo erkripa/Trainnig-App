@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "img": "assets/ex1.png",
+        "title": "Glutes"
+    },
+    {
+        "id": 1,
+        "img": "assets/ex2.png",
+        "title": "Abs"
+    },
+    {
+        "id": 1,
+        "img": "assets/ex3.png",
+        "title": "Legs"
+    },
+    {
+        "id": 1,
+        "img": "assets/ex4.png",
+        "title": "Arms"
+    }
+]

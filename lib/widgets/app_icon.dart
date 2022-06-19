@@ -22,17 +22,15 @@ class AppIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {},
+      onPressed: onPressed == null ? () {} : onPressed,
       splashRadius: D.h20,
       iconSize: iconSize == 0 ? D.f20 : iconSize,
       padding: EdgeInsets.all(padding!),
       splashColor: AppColor.gradientFirst.withOpacity(0.2),
       constraints: BoxConstraints(),
-      
       icon: Icon(
         icon,
         color: iconColor,
-        
       ),
     );
   }

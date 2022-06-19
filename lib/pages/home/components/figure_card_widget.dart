@@ -13,7 +13,7 @@ class FigureCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: D.h20 * 8,
+      height: D.h20 * 7.5,
       width: D.sWidth,
       margin: EdgeInsets.only(top: D.h10),
       child: Stack(
