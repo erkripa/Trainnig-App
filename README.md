@@ -1,4 +1,4 @@
-# video_player_app
+# Training App 
 
 A new Flutter project.
 
