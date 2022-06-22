@@ -11,10 +11,12 @@ class BigText extends StatelessWidget {
     this.textColor = AppColor.homePageTitle,
     this.isFontWeight = false,
     this.isLessFontWeight = false,
+    this.height = 0,
   }) : super(key: key);
 
   final String? text;
   final double? fontSize;
+  final double? height;
   final Color textColor;
   final bool isFontWeight;
   final bool isLessFontWeight;
@@ -35,5 +37,6 @@ class BigText extends StatelessWidget {
                 ? FontWeight.w500
                 : FontWeight.w700
             : FontWeight.normal,
+        height: height == 0 ? 0 : height,
       );
 }

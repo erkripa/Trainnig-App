@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../utils/colors.dart';
@@ -13,12 +12,14 @@ class VideoCardListTile extends StatelessWidget {
     this.time,
     this.thumbnail,
     this.videoUrl,
+    this.onTap,
   }) : super(key: key);
 
   final String? title;
   final String? time;
   final String? thumbnail;
   final String? videoUrl;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class VideoCardListTile extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
+            onTap: onTap,
             minVerticalPadding: 0,
             contentPadding: EdgeInsets.zero,
             leading: Container(

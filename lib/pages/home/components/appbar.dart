@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../utils/dimension.dart';
 import '../../../widgets/app_icon.dart';
@@ -12,6 +13,9 @@ AppBar appBar() {
       isFontWeight: true,
     ),
     backgroundColor: Colors.transparent,
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.dark,
+    ),
     elevation: 0,
     actions: [
       AppIcon(icon: Icons.arrow_back_ios_new_rounded, padding: D.p8),

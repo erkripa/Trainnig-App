@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:training/controllers/detail_page_controller.dart';
 
 import '../../../utils/colors.dart';
 import '../../../utils/dimension.dart';
@@ -72,14 +74,24 @@ Row buildHeadinAndIconWithText() {
 AppBar detailAppBar() {
   return AppBar(
     elevation: 0,
+    toolbarHeight: D.h20 * 2.4,
     backgroundColor: Colors.transparent,
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+    ),
     leading: AppIcon(
-      onPressed: () => Get.back(),
+      onPressed: () {
+        Get.find<DetailPageController>().setPlayArea = false;
+        Get.find<DetailPageController>().videPlayController?.dispose();
+        Get.back();
+      },
       icon: Icons.arrow_back_ios,
       iconColor: AppColor.secondPageTopIconColor,
     ),
     actions: [
       AppIcon(
+        onPressed: () {},
         icon: Icons.info_outline_rounded,
         padding: D.p10,
         iconColor: AppColor.secondPageTopIconColor,
@@ -117,3 +129,18 @@ Container buildDetailPageTitle() {
     ),
   );
 }
+
+BoxDecoration get detailPageDecoration => BoxDecoration(
+      color: AppColor.gradientSecond,
+      gradient: LinearGradient(
+        colors: [
+          AppColor.gradientFirst.withOpacity(0.9),
+          AppColor.gradientSecond,
+        ],
+        begin: FractionalOffset(0.0, 0.4),
+        end: Alignment.topRight,
+      ),
+    );
+BoxDecoration get detailNewDecoration => BoxDecoration(
+      color: AppColor.gradientSecond,
+    );

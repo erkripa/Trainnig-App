@@ -19,6 +19,6 @@ class AppRoute {
       name: _detail,
       page: () => DetailPage(),
       transition: Transition.rightToLeftWithFade,
-    )
+    ),
   ];
 }

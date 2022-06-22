@@ -11,10 +11,11 @@ class AppIcon extends StatelessWidget {
     this.padding = 0,
     this.iconSize = 0,
     this.iconColor = AppColor.homePageIcons,
+    this.splashColor,
   }) : super(key: key);
 
   final IconData icon;
-  final Color iconColor;
+  final Color? iconColor, splashColor;
   final VoidCallback? onPressed;
   final double? padding;
   final double? iconSize;
@@ -26,7 +27,7 @@ class AppIcon extends StatelessWidget {
       splashRadius: D.h20,
       iconSize: iconSize == 0 ? D.f20 : iconSize,
       padding: EdgeInsets.all(padding!),
-      splashColor: AppColor.gradientFirst.withOpacity(0.2),
+      splashColor: splashColor,
       constraints: BoxConstraints(),
       icon: Icon(
         icon,
