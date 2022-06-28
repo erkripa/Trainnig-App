@@ -25,7 +25,6 @@ SnackbarController showMessage(
       isFontWeight: true,
       isLessFontWeight: true,
       fontSize: D.f14,
-      height: 1.2,
     ),
     backgroundColor: AppColor.gradientSecond,
     icon: AppIcon(

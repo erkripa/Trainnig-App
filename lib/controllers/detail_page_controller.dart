@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +27,8 @@ class DetailPageController extends GetxController {
   VideoPlayerController? _controller;
   VideoPlayerController? get videPlayController => _controller;
 
+  VideoPlayerController? oldController;
+
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
 
@@ -34,6 +37,13 @@ class DetailPageController extends GetxController {
 
   var _onControllerUpdateTime;
   int _isPlayingIndex = -1;
+
+  Duration? _duration;
+  Duration? get duration => _duration;
+  Duration? _position;
+  Duration? get position => _position;
+  double _progress = 0.0;
+  double get progress => _progress;
 
   Future<void> getVideoList() async {
     try {
@@ -45,7 +55,7 @@ class DetailPageController extends GetxController {
       await Future.delayed(Duration(milliseconds: 1500));
       update();
     } catch (e) {
-      log("Error Catch during load video json = " + e.toString());
+      print("Error Catch during load video json = " + e.toString());
     }
   }
 
@@ -60,15 +70,16 @@ class DetailPageController extends GetxController {
   }
 
   void videoInitialized(int index) {
+    _disposed = false;
     final videoUrl = _videoList[index].videoUrl;
     final controller = VideoPlayerController.network(videoUrl!);
-    final oldController = _controller;
+    oldController = _controller;
     _controller = controller;
 
     if (oldController != null) {
-      oldController.removeListener(_onControllerUpdate);
-      oldController.pause();
-      log('old controller removed');
+      oldController?.removeListener(_onControllerUpdate);
+      oldController?.pause();
+      print('old controller removed');
     }
     controller
       ..initialize().then((_) {
@@ -76,6 +87,7 @@ class DetailPageController extends GetxController {
         _isPlayingIndex = index;
         controller.addListener(_onControllerUpdate);
         controller.play();
+        update();
       });
     update();
   }
@@ -117,32 +129,49 @@ class DetailPageController extends GetxController {
   }
 
   void _onControllerUpdate() async {
-    if (disposed) {
-      log('diposed1');
-      return;
-    }
+    // if (disposed) {
+    //   print('diposed1');
+    //   return;
+    // }
     _onControllerUpdateTime = 0;
     update();
     final now = DateTime.now().microsecondsSinceEpoch;
     if (_onControllerUpdateTime > 0) {
-      log('old controller has greter than 0');
+      print('old controller has greter than 0');
       return;
     }
     _onControllerUpdateTime = now + 500;
     update();
+
     final controller = _controller;
 
     if (controller == null) {
-      log('controller is null');
+      print('controller is null');
       return;
     }
 
     if (!controller.value.isInitialized) {
-      log('controller can not be initialized');
+      print('controller can not be initialized');
       return;
     }
+    //
+    // if (_duration == null) {
+    //   _duration = _controller?.value.duration;
+    // }
+    // var duration = _duration;
+
+    // if (duration == null) return;
+
+    // var position = await controller.position;
+    // _position = position;
 
     final playing = controller.value.isPlaying;
+
+    // if (playing) {
+    //   if (_disposed) return;
+    //   _progress = position!.inMilliseconds.ceilToDouble() /
+    //       duration.inMilliseconds.ceilToDouble();
+    // }
     _isPlaying = playing;
 
     update();
@@ -150,11 +179,11 @@ class DetailPageController extends GetxController {
 
   @override
   void dispose() {
-    _disposed = true;
+    print('disposed');
+
     _controller!.pause();
     _controller!.dispose();
     super.dispose();
-    log('disposed');
   }
 
   bool get noMute {
@@ -166,6 +195,25 @@ class DetailPageController extends GetxController {
       _controller?.setVolume(0);
     } else {
       _controller?.setVolume(1.0);
+    }
+  }
+
+  void onChangedProgress(double value) {
+    _progress = value * 0.01;
+    update();
+  }
+
+  void onChangeStart(double value) {
+    _controller?.pause();
+  }
+
+  void onChangeEnd(double value) {
+    final duration = _controller?.value.duration;
+    if (duration != null) {
+      var newValue = max(0, min(value, 99)) * 0.01;
+      var millis = (duration.inMicroseconds * newValue).toInt();
+      _controller?.seekTo(Duration(microseconds: millis));
+      _controller?.play();
     }
   }
 }

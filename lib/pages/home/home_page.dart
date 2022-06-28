@@ -4,6 +4,7 @@ import 'package:training/pages/home/components/methods.dart';
 import 'package:training/utils/colors.dart';
 import 'package:training/utils/dimension.dart';
 
+import '../../controllers/detail_page_controller.dart';
 import '../../controllers/home_page_controller.dart';
 import '../../widgets/bigtext.dart';
 import 'components/appbar.dart';
@@ -16,6 +17,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.find<HomePageController>().getInfoList();
+    Get.find<DetailPageController>().getVideoList();
+
     return Scaffold(
       appBar: appBar(),
       body: Container(

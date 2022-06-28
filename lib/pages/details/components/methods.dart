@@ -82,8 +82,8 @@ AppBar detailAppBar() {
     ),
     leading: AppIcon(
       onPressed: () {
-        Get.find<DetailPageController>().setPlayArea = false;
-        Get.find<DetailPageController>().videPlayController?.dispose();
+        // Get.find<DetailPageController>().setPlayArea = false;
+        // Get.find<DetailPageController>().videPlayController?.dispose();
         Get.back();
       },
       icon: Icons.arrow_back_ios,
