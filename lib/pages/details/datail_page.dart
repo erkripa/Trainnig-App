@@ -86,7 +86,7 @@ class _DetailPageState extends State<DetailPage> {
                                               itemBuilder: (_, index) {
                                                 final videoModel =
                                                     snapshot.data![index];
-                                                    
+
                                                 return VideoCardListTile(
                                                   onTap: () {
                                                     _detailPageController
@@ -136,6 +136,13 @@ class _DetailPageState extends State<DetailPage> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    Get.find<DetailPageController>().setPlayArea = false;
+    Get.find<DetailPageController>().videPlayController?.dispose();
+    super.dispose();
   }
 
   Widget _videoPlayView(DetailPageController _detailPageController) {

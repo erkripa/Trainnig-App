@@ -84,7 +84,7 @@ AppBar detailAppBar() {
       onPressed: () {
         // Get.find<DetailPageController>().setPlayArea = false;
         // Get.find<DetailPageController>().videPlayController?.dispose();
-        Get.back();
+        Get.back(canPop: true);
       },
       icon: Icons.arrow_back_ios,
       iconColor: AppColor.secondPageTopIconColor,

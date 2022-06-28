@@ -18,7 +18,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.find<HomePageController>().getInfoList();
-    Get.find<DetailPageController>().getVideoListFromFirebase();
 
     return Scaffold(
       appBar: appBar(),
@@ -93,5 +92,8 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+    
   }
+
+
 }
