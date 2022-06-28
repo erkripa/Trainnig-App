@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -45,18 +46,38 @@ class DetailPageController extends GetxController {
   double _progress = 0.0;
   double get progress => _progress;
 
-  Future<void> getVideoList() async {
-    try {
-      String response = await rootBundle.loadString('json/videoinfo.json');
-      _videoList = [];
-      _videoList.addAll(videoModelFromJson(response));
-      _isLoded = true;
+  // Future<void> getVideoList() async {
+  //   try {
+  //     String response = await rootBundle.loadString('json/videoinfo.json');
+  //     _videoList = [];
+  //     _videoList.addAll(videoModelFromJson(response));
+  //     _isLoded = true;
 
-      await Future.delayed(Duration(milliseconds: 1500));
-      update();
-    } catch (e) {
-      print("Error Catch during load video json = " + e.toString());
-    }
+  //     await Future.delayed(Duration(milliseconds: 1500));
+  //     update();
+  //   } catch (e) {
+  //     print("Error Catch during load video json = " + e.toString());
+  //   }
+  // }
+
+  Future<List<VideoModel>> getVideoListFromFirebase() async {
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await _db.collection('videos').get();
+
+    List<VideoModel> videoList = [];
+
+    videoList.addAll(snapshot.docs
+        .map((docSnapshot) => VideoModel.fromDocumentSnapshot(docSnapshot))
+        .toList());
+
+    _videoList.addAll(videoList);
+    _isLoded = true;
+
+    update();
+
+    return videoList;
   }
 
   void changePlayArea() {

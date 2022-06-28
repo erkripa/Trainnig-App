@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:training/models/video_model.dart';
 import 'package:training/utils/colors.dart';
 import 'package:training/utils/dimension.dart';
 import 'package:training/widgets/app_icon.dart';
@@ -62,26 +64,63 @@ class _DetailPageState extends State<DetailPage> {
                           buildHeadinAndIconWithText(),
                           _detailPageController.isLoded
                               ? Expanded(
-                                  child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      itemCount: _detailPageController
-                                          .videoList.length,
-                                      itemBuilder: (_, index) {
-                                        final videoModel = _detailPageController
-                                            .videoList[index];
-                                        return VideoCardListTile(
-                                          onTap: () {
-                                            _detailPageController
-                                                .videoInitialized(index);
-                                            _detailPageController
-                                                .changePlayArea();
-                                          },
-                                          title: videoModel.title,
-                                          thumbnail: videoModel.thumbnail,
-                                          time: videoModel.time,
-                                          videoUrl: videoModel.videoUrl,
+                                  child: FutureBuilder<List<VideoModel>>(
+                                    future: _detailPageController
+                                        .getVideoListFromFirebase(),
+                                    builder: (context,
+                                        AsyncSnapshot<List<VideoModel>?>
+                                            snapshot) {
+                                      if (snapshot.hasError) {
+                                        return Center(
+                                          child: BigText(
+                                            text: snapshot.error.toString(),
+                                          ),
                                         );
-                                      }),
+                                      }
+
+                                      if (snapshot.hasData) {
+                                        if (snapshot.data!.length > 0) {
+                                          return ListView.builder(
+                                              padding: EdgeInsets.zero,
+                                              itemCount: snapshot.data!.length,
+                                              itemBuilder: (_, index) {
+                                                final videoModel =
+                                                    snapshot.data![index];
+                                                    
+                                                return VideoCardListTile(
+                                                  onTap: () {
+                                                    _detailPageController
+                                                        .videoInitialized(
+                                                            index);
+                                                    _detailPageController
+                                                        .changePlayArea();
+                                                  },
+                                                  title: videoModel.title,
+                                                  thumbnail:
+                                                      videoModel.thumbnail,
+                                                  time: videoModel.time,
+                                                  videoUrl: videoModel.videoUrl,
+                                                );
+                                              });
+                                        } else {
+                                          return Center(
+                                            child: BigText(
+                                              text:
+                                                  "!! Your Database is now empty !!",
+                                              textColor:
+                                                  AppColor.gradientSecond,
+                                              isFontWeight: true,
+                                              isLessFontWeight: true,
+                                              fontSize: D.f20,
+                                            ),
+                                          );
+                                        }
+                                      }
+
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    },
+                                  ),
                                 )
                               : Container(
                                   margin: EdgeInsets.only(top: D.sHeight / 4),
@@ -127,9 +166,6 @@ class _DetailPageState extends State<DetailPage> {
       margin: EdgeInsets.only(top: D.p10 / 3),
       child: Column(
         children: [
-          
-          
-
           VideoProgressIndicator(
             detailPageController.videPlayController!,
             allowScrubbing: true,
@@ -181,6 +217,7 @@ class _DetailPageState extends State<DetailPage> {
                   final duration = value.duration.inSeconds;
                   final position = value.position.inSeconds;
                   final head = position;
+
                   final remained = max(0, duration - head);
                   final mins = convertTwo(remained ~/ 60.0);
                   final secs = convertTwo(remained % 60);
@@ -188,6 +225,8 @@ class _DetailPageState extends State<DetailPage> {
                   return BigText(
                     text: "$mins:$secs",
                     textColor: AppColor.secondPageIconColor.withAlpha(211),
+                    isFontWeight: true,
+                    isLessFontWeight: true,
                   );
                 },
               ),

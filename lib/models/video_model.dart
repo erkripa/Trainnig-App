@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 List<VideoModel> videoModelFromJson(String str) =>
     List<VideoModel>.from(json.decode(str).map((x) => VideoModel.fromJson(x)));
 
@@ -36,4 +38,12 @@ class VideoModel {
         "thumbnail": thumbnail,
         "videoUrl": videoUrl,
       };
+
+ factory VideoModel.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)=>VideoModel(
+         title: doc.data()!["title"],
+        time: doc.data()!["time"],
+        thumbnail: doc.data()!["thumbnail"],
+        videoUrl: doc.data()!["videoUrl"],
+  );
+
 }
