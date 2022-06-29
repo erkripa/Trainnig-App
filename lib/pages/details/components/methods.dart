@@ -74,7 +74,7 @@ Row buildHeadinAndIconWithText() {
 AppBar detailAppBar() {
   return AppBar(
     elevation: 0,
-    toolbarHeight: D.h20 * 2.4,
+    toolbarHeight: D.h20 * 2,
     backgroundColor: Colors.transparent,
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

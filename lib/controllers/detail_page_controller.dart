@@ -43,6 +43,22 @@ class DetailPageController extends GetxController {
   double _progress = 0.0;
   double get progress => _progress;
 
+  String _videoTitle = "";
+  String get videoTitle => _videoTitle;
+
+  late Future<List<VideoModel>> _futureOfVideoList;
+  Future<List<VideoModel>> get futureOfVideoList => _futureOfVideoList;
+
+  @override
+  void onInit() {
+    initvideolist();
+    super.onInit();
+  }
+
+  Future<void> initvideolist() async {
+    _futureOfVideoList = getVideoListFromFirebase();
+  }
+
   Future<List<VideoModel>> getVideoListFromFirebase() async {
     final FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -54,9 +70,10 @@ class DetailPageController extends GetxController {
     videoList.addAll(snapshot.docs
         .map((docSnapshot) => VideoModel.fromDocumentSnapshot(docSnapshot))
         .toList());
-
+    _videoList = [];
     _videoList.addAll(videoList);
     _isLoded = true;
+    print("length of video List = " + _videoList.length.toString());
 
     update();
 
@@ -73,6 +90,7 @@ class DetailPageController extends GetxController {
   }
 
   void videoInitialized(int index) async {
+    _videoTitle = _videoList[index].title!;
     final videoUrl = _videoList[index].videoUrl;
     final controller = VideoPlayerController.network(videoUrl!);
     oldController = _controller;
@@ -106,6 +124,7 @@ class DetailPageController extends GetxController {
   }
 
   void onRightBtnClicked() {
+    print("index" + _isPlayingIndex.toString());
     final index = _isPlayingIndex + 1;
     if (index <= videoList.length - 1) {
       videoInitialized(index);

@@ -18,20 +18,16 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Get.find<DetailPageController>().getVideoListFromFirebase();
-
     return GetBuilder<HomePageController>(builder: (_) {
-      return GetBuilder<DetailPageController>(builder: (_) {
-        return GetMaterialApp(
-          title: 'Traning App',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          // home: HomePage(),
-          getPages: AppRoute.routes,
-        );
-      });
+      return GetMaterialApp(
+        title: 'Traning App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        // home: HomePage(),
+        getPages: AppRoute.routes,
+      );
     });
   }
 }
