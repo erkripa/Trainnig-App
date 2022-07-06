@@ -12,11 +12,13 @@ AppBar appBar() {
       fontSize: D.f25,
       isFontWeight: true,
     ),
+    elevation: 0,
+    toolbarHeight: D.h20 * 2.4,
     backgroundColor: Colors.transparent,
     systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ),
-    elevation: 0,
     actions: [
       AppIcon(icon: Icons.arrow_back_ios_new_rounded, padding: D.p8),
       AppIcon(icon: Icons.today_rounded),

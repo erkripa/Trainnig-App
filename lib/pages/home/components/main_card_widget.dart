@@ -14,10 +14,10 @@ class MainCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: D.sHeight / 4,
+      height: D.sHeight / 5,
       width: double.maxFinite,
       padding:
-          EdgeInsets.only(top: D.p20, left: D.w20, right: D.w20, bottom: D.p20),
+          EdgeInsets.only(top: D.p10, left: D.w20, right: D.w20, bottom: D.p10),
       margin: EdgeInsets.only(top: D.h15),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -53,49 +53,50 @@ class MainCardWidget extends StatelessWidget {
           BigText(
             text: 'Legs Toning',
             textColor: AppColor.homePageContainerTextSmall,
-            fontSize: D.f25,
+            fontSize: D.f20,
           ),
           SizedBox(height: D.h5),
           BigText(
-            text: 'and Glutes Workout',
-            textColor: AppColor.homePageContainerTextSmall,
-            fontSize: D.f25,
-          ),
+              text: 'and Glutes Workout',
+              textColor: AppColor.homePageContainerTextSmall,
+              fontSize: D.f20),
           Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Row(
-                children: [
-                  AppIcon(
-                    icon: Icons.timer_outlined,
-                    iconColor: Colors.white,
-                  ),
-                  SizedBox(width: D.w5),
-                  SmallText(
-                      text: '60 min',
-                      textColor: AppColor.homePageContainerTextSmall)
-                ],
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(D.f20 * 3),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.gradientFirst,
-                      offset: Offset(4, 8),
-                      blurRadius: 10,
-                    )
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    AppIcon(
+                      icon: Icons.timer_outlined,
+                      iconColor: Colors.white,
+                    ),
+                    SizedBox(width: D.w5),
+                    SmallText(
+                        text: '60 min',
+                        textColor: AppColor.homePageContainerTextSmall)
                   ],
                 ),
-                child: AppIcon(
-                  icon: Icons.play_circle_fill_rounded,
-                  iconColor: Colors.white,
-                  iconSize: D.f20 * 2.8,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(D.f20 * 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.gradientFirst,
+                        offset: Offset(4, 8),
+                        blurRadius: 10,
+                      )
+                    ],
+                  ),
+                  child: AppIcon(
+                    icon: Icons.play_circle_fill_rounded,
+                    iconColor: Colors.white,
+                    iconSize: D.f20 * 2.5,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

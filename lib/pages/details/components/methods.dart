@@ -74,7 +74,7 @@ Row buildHeadinAndIconWithText() {
 AppBar detailAppBar() {
   return AppBar(
     elevation: 0,
-    toolbarHeight: D.h20 * 2.4,
+    toolbarHeight: D.h20 * 2,
     backgroundColor: Colors.transparent,
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -84,7 +84,7 @@ AppBar detailAppBar() {
       onPressed: () {
         // Get.find<DetailPageController>().setPlayArea = false;
         // Get.find<DetailPageController>().videPlayController?.dispose();
-        Get.back();
+        Get.back(canPop: true);
       },
       icon: Icons.arrow_back_ios,
       iconColor: AppColor.secondPageTopIconColor,

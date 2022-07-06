@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:training/pages/home/components/methods.dart';
@@ -12,12 +13,11 @@ import 'components/figure_card_widget.dart';
 import 'components/main_card_widget.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Get.find<HomePageController>().getInfoList();
-    Get.find<DetailPageController>().getVideoList();
 
     return Scaffold(
       appBar: appBar(),
@@ -92,5 +92,8 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+    
   }
+
+
 }

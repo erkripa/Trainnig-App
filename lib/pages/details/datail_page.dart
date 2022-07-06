@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:training/models/video_model.dart';
 import 'package:training/utils/colors.dart';
 import 'package:training/utils/dimension.dart';
 import 'package:training/widgets/app_icon.dart';
@@ -20,90 +22,160 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  Future<void> onRefresh() async {
+    await Get.find<DetailPageController>().initvideolist();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('isLandscape' + MediaQuery.of(context).orientation.toString());
+    bool _isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       body: GetBuilder<DetailPageController>(
         builder: (_detailPageController) {
-          return Container(
-            decoration: _detailPageController.playArea
-                ? detailNewDecoration
-                : detailPageDecoration,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                detailAppBar(),
-                !_detailPageController.playArea
-                    ? buildFirstHalfSection()
-                    : Column(
-                        children: [
-                          _videoPlayView(_detailPageController),
-                          _videoControllBtnView(_detailPageController),
-                        ],
+          return !_isLandscape
+              ? Container(
+                  decoration: _detailPageController.playArea
+                      ? detailNewDecoration
+                      : detailPageDecoration,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      detailAppBar(),
+                      !_detailPageController.playArea
+                          ? buildFirstHalfSection()
+                          : Column(
+                              children: [
+                                _videoPlayView(_detailPageController),
+                                _videoControllBtnView(_detailPageController),
+                              ],
+                            ),
+                      //
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: D.h10),
+                          decoration: BoxDecoration(
+                            color: AppColor.homePageBackground,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(D.w20 * 4),
+                            ),
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.only(
+                              top: D.p20,
+                              left: D.p20,
+                              right: D.w10 * 3,
+                            ),
+                            child: Column(
+                              children: [
+                                buildHeadinAndIconWithText(),
+                                _detailPageController.isLoded
+                                    ? Expanded(
+                                        child: RefreshIndicator(
+                                          onRefresh: onRefresh,
+                                          child:
+                                              FutureBuilder<List<VideoModel>>(
+                                            future: _detailPageController
+                                                .futureOfVideoList,
+                                            builder: (context,
+                                                AsyncSnapshot<List<VideoModel>?>
+                                                    snapshot) {
+                                              if (snapshot.hasError) {
+                                                return Center(
+                                                  child: BigText(
+                                                    text: snapshot.error
+                                                        .toString(),
+                                                  ),
+                                                );
+                                              }
+
+                                              if (snapshot.hasData) {
+                                                if (snapshot.data!.length > 0) {
+                                                  return ListView.builder(
+                                                      padding: EdgeInsets.zero,
+                                                      itemCount:
+                                                          snapshot.data!.length,
+                                                      itemBuilder: (_, index) {
+                                                        final videoModel =
+                                                            snapshot
+                                                                .data![index];
+
+                                                        return VideoCardListTile(
+                                                          onTap: () {
+                                                            _detailPageController
+                                                                .videoInitialized(
+                                                                    index);
+                                                            _detailPageController
+                                                                .changePlayArea();
+                                                          },
+                                                          title:
+                                                              videoModel.title,
+                                                          thumbnail: videoModel
+                                                              .thumbnail,
+                                                          time: videoModel.time,
+                                                          videoUrl: videoModel
+                                                              .videoUrl,
+                                                        );
+                                                      });
+                                                } else {
+                                                  return Center(
+                                                    child: BigText(
+                                                      text:
+                                                          "!! Your Database is now empty !!",
+                                                      textColor: AppColor
+                                                          .gradientSecond,
+                                                      isFontWeight: true,
+                                                      isLessFontWeight: true,
+                                                      fontSize: D.f20,
+                                                    ),
+                                                  );
+                                                }
+                                              }
+
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        margin:
+                                            EdgeInsets.only(top: D.sHeight / 4),
+                                        child: CircularProgressIndicator()),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                //
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(top: D.h10),
-                    decoration: BoxDecoration(
-                      color: AppColor.homePageBackground,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(D.w20 * 4),
-                      ),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        top: D.p20,
-                        left: D.p20,
-                        right: D.w10 * 3,
-                      ),
-                      child: Column(
-                        children: [
-                          buildHeadinAndIconWithText(),
-                          _detailPageController.isLoded
-                              ? Expanded(
-                                  child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      itemCount: _detailPageController
-                                          .videoList.length,
-                                      itemBuilder: (_, index) {
-                                        final videoModel = _detailPageController
-                                            .videoList[index];
-                                        return VideoCardListTile(
-                                          onTap: () {
-                                            _detailPageController
-                                                .videoInitialized(index);
-                                            _detailPageController
-                                                .changePlayArea();
-                                          },
-                                          title: videoModel.title,
-                                          thumbnail: videoModel.thumbnail,
-                                          time: videoModel.time,
-                                          videoUrl: videoModel.videoUrl,
-                                        );
-                                      }),
-                                )
-                              : Container(
-                                  margin: EdgeInsets.only(top: D.sHeight / 4),
-                                  child: CircularProgressIndicator()),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          );
+                )
+              : Center(
+                  child: BigText(
+                  text:
+                      "Right Now Landscape is not Supportable!\nWe will implement this feature very soon..",
+                  textColor: AppColor.gradientFirst,
+                  fontSize: D.f25,
+                ));
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    Get.find<DetailPageController>().setPlayArea = false;
+    Get.find<DetailPageController>().videPlayController?.dispose();
+    super.dispose();
   }
 
   Widget _videoPlayView(DetailPageController _detailPageController) {
     final controller = _detailPageController.videPlayController;
     if (controller != null && controller.value.isInitialized) {
       return AspectRatio(
-        aspectRatio: controller.value.aspectRatio,
+        aspectRatio: 16 / 9,
         child: VideoPlayer(controller),
       );
     } else {
@@ -124,12 +196,15 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     return Container(
-      margin: EdgeInsets.only(top: D.p10 / 3),
+      padding: EdgeInsets.only(top: D.p10 / 3, left: D.w10, right: D.w10),
       child: Column(
         children: [
-          
-          
-
+          SizedBox(height: D.h10),
+          BigText(
+            text: detailPageController.videoTitle,
+            textColor: AppColor.secondPageIconColor,
+            isFontWeight: true,
+          ),
           VideoProgressIndicator(
             detailPageController.videPlayController!,
             allowScrubbing: true,
@@ -181,6 +256,7 @@ class _DetailPageState extends State<DetailPage> {
                   final duration = value.duration.inSeconds;
                   final position = value.position.inSeconds;
                   final head = position;
+
                   final remained = max(0, duration - head);
                   final mins = convertTwo(remained ~/ 60.0);
                   final secs = convertTwo(remained % 60);
@@ -188,6 +264,8 @@ class _DetailPageState extends State<DetailPage> {
                   return BigText(
                     text: "$mins:$secs",
                     textColor: AppColor.secondPageIconColor.withAlpha(211),
+                    isFontWeight: true,
+                    isLessFontWeight: true,
                   );
                 },
               ),

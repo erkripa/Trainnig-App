@@ -1,15 +1,8 @@
-import 'dart:developer';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:training/models/video_model.dart';
-import 'package:training/utils/colors.dart';
-import 'package:training/utils/dimension.dart';
-import 'package:training/widgets/app_icon.dart';
-import 'package:training/widgets/bigtext.dart';
-import 'package:training/widgets/smalltext.dart';
 import 'package:video_player/video_player.dart';
 
 import '../widgets/show_message.dart';
@@ -26,6 +19,11 @@ class DetailPageController extends GetxController {
 
   VideoPlayerController? _controller;
   VideoPlayerController? get videPlayController => _controller;
+
+  set controllerTonull(value) {
+    _controller = value;
+    update();
+  }
 
   VideoPlayerController? oldController;
 
@@ -45,18 +43,41 @@ class DetailPageController extends GetxController {
   double _progress = 0.0;
   double get progress => _progress;
 
-  Future<void> getVideoList() async {
-    try {
-      String response = await rootBundle.loadString('json/videoinfo.json');
-      _videoList = [];
-      _videoList.addAll(videoModelFromJson(response));
-      _isLoded = true;
+  String _videoTitle = "";
+  String get videoTitle => _videoTitle;
 
-      await Future.delayed(Duration(milliseconds: 1500));
-      update();
-    } catch (e) {
-      print("Error Catch during load video json = " + e.toString());
-    }
+  late Future<List<VideoModel>> _futureOfVideoList;
+  Future<List<VideoModel>> get futureOfVideoList => _futureOfVideoList;
+
+  @override
+  void onInit() {
+    initvideolist();
+    super.onInit();
+  }
+
+  Future<void> initvideolist() async {
+    _futureOfVideoList = getVideoListFromFirebase();
+  }
+
+  Future<List<VideoModel>> getVideoListFromFirebase() async {
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await _db.collection('videos').get();
+
+    List<VideoModel> videoList = [];
+
+    videoList.addAll(snapshot.docs
+        .map((docSnapshot) => VideoModel.fromDocumentSnapshot(docSnapshot))
+        .toList());
+    _videoList = [];
+    _videoList.addAll(videoList);
+    _isLoded = true;
+    print("length of video List = " + _videoList.length.toString());
+
+    update();
+
+    return videoList;
   }
 
   void changePlayArea() {
@@ -66,16 +87,15 @@ class DetailPageController extends GetxController {
 
   set setPlayArea(bool newPlayArea) {
     _playArea = newPlayArea;
-    update();
   }
 
-  void videoInitialized(int index) {
-    _disposed = false;
+  void videoInitialized(int index) async {
+    _videoTitle = _videoList[index].title!;
     final videoUrl = _videoList[index].videoUrl;
     final controller = VideoPlayerController.network(videoUrl!);
     oldController = _controller;
     _controller = controller;
-
+    update();
     if (oldController != null) {
       oldController?.removeListener(_onControllerUpdate);
       oldController?.pause();
@@ -105,6 +125,7 @@ class DetailPageController extends GetxController {
   }
 
   void onRightBtnClicked() {
+    print("index" + _isPlayingIndex.toString());
     final index = _isPlayingIndex + 1;
     if (index <= videoList.length - 1) {
       videoInitialized(index);
@@ -129,10 +150,6 @@ class DetailPageController extends GetxController {
   }
 
   void _onControllerUpdate() async {
-    // if (disposed) {
-    //   print('diposed1');
-    //   return;
-    // }
     _onControllerUpdateTime = 0;
     update();
     final now = DateTime.now().microsecondsSinceEpoch;
@@ -154,24 +171,9 @@ class DetailPageController extends GetxController {
       print('controller can not be initialized');
       return;
     }
-    //
-    // if (_duration == null) {
-    //   _duration = _controller?.value.duration;
-    // }
-    // var duration = _duration;
-
-    // if (duration == null) return;
-
-    // var position = await controller.position;
-    // _position = position;
 
     final playing = controller.value.isPlaying;
 
-    // if (playing) {
-    //   if (_disposed) return;
-    //   _progress = position!.inMilliseconds.ceilToDouble() /
-    //       duration.inMilliseconds.ceilToDouble();
-    // }
     _isPlaying = playing;
 
     update();
@@ -180,10 +182,17 @@ class DetailPageController extends GetxController {
   @override
   void dispose() {
     print('disposed');
-
     _controller!.pause();
     _controller!.dispose();
+    setPlayArea = false;
+    _controller = null;
     super.dispose();
+  }
+
+  void customDispose() {
+    setPlayArea = false;
+    videPlayController?.dispose();
+    update();
   }
 
   bool get noMute {

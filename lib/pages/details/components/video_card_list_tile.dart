@@ -37,7 +37,7 @@ class VideoCardListTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(D.w10),
                 color: AppColor.homePagePlanColor,
                 image: DecorationImage(
-                  image: AssetImage(thumbnail!),
+                  image: NetworkImage(thumbnail!),
                   fit: BoxFit.cover,
                 ),
               ),

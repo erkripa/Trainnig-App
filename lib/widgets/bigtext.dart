@@ -26,6 +26,8 @@ class BigText extends StatelessWidget {
     return Text(
       text ?? '',
       style: kTitleTextStyle,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
     );
   }
 

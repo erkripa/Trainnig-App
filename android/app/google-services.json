@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "116656895534",
+    "project_id": "yogatraning-823a0",
+    "storage_bucket": "yogatraning-823a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116656895534:android:e5ca8957a15d40f9ab51bf",
+        "android_client_info": {
+          "package_name": "com.ayush.training"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "116656895534-7o8ml2n808fl8h1r0d1hsipfia5s9unr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBg43MObOLN4oGnMQk2autcmmVGw0_L41g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "116656895534-7o8ml2n808fl8h1r0d1hsipfia5s9unr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
