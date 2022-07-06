@@ -98,6 +98,7 @@ class DetailPageController extends GetxController {
     update();
     if (oldController != null) {
       oldController?.removeListener(_onControllerUpdate);
+      oldController?.pause();
       print('old controller removed');
     }
     controller

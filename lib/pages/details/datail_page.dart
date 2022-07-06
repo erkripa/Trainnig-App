@@ -175,7 +175,7 @@ class _DetailPageState extends State<DetailPage> {
     final controller = _detailPageController.videPlayController;
     if (controller != null && controller.value.isInitialized) {
       return AspectRatio(
-        aspectRatio: controller.value.aspectRatio,
+        aspectRatio: 16 / 9,
         child: VideoPlayer(controller),
       );
     } else {

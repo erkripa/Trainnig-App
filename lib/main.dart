@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:training/controllers/detail_page_controller.dart';
 import 'package:training/controllers/home_page_controller.dart';
 import 'package:training/routes/app_route.dart';
 
